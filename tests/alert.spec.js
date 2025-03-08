@@ -1,22 +1,23 @@
 const { test, expect } = require('@playwright/test');
-const globalSetup = require('../utils/fixtures');  // ✅ Import global setup
+const { testSetup } = require('../utils/testSetup');  // ✅ Use centralized test setup
 const AlertPage = require('../pages/AlertPage');
 
 test.describe('Alert Handling Tests', () => {
-    test('should handle JavaScript alerts', async ({ }) => {
-        const { browser, context, page } = await globalSetup(); // ✅ Use reusable setup
+    testSetup('https://testpages.eviltester.com/styled/alerts/alert-test.html'); // ✅ Pass specific URL for alerts
 
-        const alertPage = new AlertPage(page);
-        await alertPage.navigate();
+    let alertPage;
 
+    test.beforeEach(async ({ page }) => {
+        alertPage = new AlertPage(page); // ✅ Initialize AlertPage with the test's page instance
+    });
+
+    test('should handle JavaScript alerts', async ({ page }) => {
         page.on('dialog', async dialog => {
             console.log(`Alert message: ${dialog.message()}`);
             await dialog.accept();
         });
 
         await alertPage.triggerAlert();
-        await page.waitForTimeout(5000);
-
-        await browser.close(); // ✅ Ensure the browser is closed properly
+        await page.waitForTimeout(5000); // ✅ Ensure the test waits for the alert handling
     });
 });

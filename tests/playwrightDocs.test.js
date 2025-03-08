@@ -1,24 +1,17 @@
 const { test, expect } = require('@playwright/test');
+const { testSetup } = require('../utils/testSetup');  // ✅ Centralized setup
 const PlaywrightDocsPage = require('../pages/PlaywrightDocsPage');
-const globalSetup = require('../utils/fixtures');  // ✅ Import global setup
 
 test.describe('Playwright Documentation Tests', () => {
-    let browser, context, page;
+    testSetup('https://playwright.dev/'); // ✅ Pass Playwright Docs URL
+
     let playwrightDocsPage;
 
-
     test.beforeEach(async ({ page }) => {
-        const setup = await globalSetup();
-        browser = setup.browser;
-        context = setup.context;
-        page = setup.page;
-        playwrightDocsPage = new PlaywrightDocsPage(page);
-        await page.goto("https://playwright.dev/");
-
+        playwrightDocsPage = new PlaywrightDocsPage(page); // ✅ Initialize page object
     });
 
     test('Validate Dropdown Menu Contains Programming Languages', async ({ page }) => {
-        // await playwrightDocsPage.hoverDocsMenu();
         await playwrightDocsPage.validateDropdownContainsLanguages();
     });
 
