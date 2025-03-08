@@ -1,8 +1,9 @@
-const { chromium } = require('@playwright/test');
+const { chromium, firefox, webkit } = require('@playwright/test');
 
 async function globalSetup() {
-    const browser = await chromium.launch({
-        headless: true, // Change to true for headless execution
+    const browserType = process.env.BROWSER || 'chromium';
+    const browser = await { chromium, firefox, webkit }[browserType].launch({
+        headless: true, // Change to false if you want UI mode
         // slowMo: 500
     });
 
