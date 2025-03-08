@@ -1,0 +1,39 @@
+name: Playwright Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser to run tests on'
+        required: true
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+      tag:
+        description: 'Test Tag (Optional, e.g., @smoke)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            npx playwright test --project=${{ inputs.browser }} --grep @${{ inputs.tag }}
+          else
+            npx playwright test --project=${{ inputs.browser }}
+          fi
