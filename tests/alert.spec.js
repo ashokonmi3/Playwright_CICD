@@ -4,7 +4,7 @@ test.describe('Alert Handling Tests', () => {
     test('should handle JavaScript alerts', async ({ }) => {
         // Launch the browser in non-headless mode with a slow motion delay of 500ms
         const browser = await chromium.launch({
-            headless: false,
+            headless: true,
             slowMo: 500 // Slow down actions for better visibility
         });
         const context = await browser.newContext({
