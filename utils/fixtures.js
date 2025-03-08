@@ -2,8 +2,8 @@ const { chromium } = require('@playwright/test');
 
 async function globalSetup() {
     const browser = await chromium.launch({
-        headless: false, // Change to true for headless execution
-        slowMo: 500
+        headless: true, // Change to true for headless execution
+        // slowMo: 500
     });
 
     const context = await browser.newContext({
